@@ -1,17 +1,48 @@
 package powerset;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
+    private static <T> LinkedList<LinkedList<T>> addToAll(LinkedList<LinkedList<T>> list, T value) {
+        if (list.isEmpty()) {
+            return new LinkedList<>();
+        }
+        LinkedList<LinkedList<T>> copy = new LinkedList<>(list);
+        LinkedList<T> last = new LinkedList<>(copy.removeLast());
+        last.add(value);
+        LinkedList<LinkedList<T>> result = addToAll(copy, value);
+        result.add(last);
+        return result;
+    }
+
+    private static <T> LinkedList<T> concatenate(LinkedList<T> l1, LinkedList<T> l2) {
+        if (l2.isEmpty()) {
+            return new LinkedList<>(l1);
+        }
+        LinkedList<T> copy1 = new LinkedList<>(l1);
+        LinkedList<T> copy2 = new LinkedList<>(l2);
+        copy1.add(copy2.removeFirst());
+        return concatenate(copy1, copy2);
+    }
 
     /**
      * @param inputSet from this set all power sets should be returned as a list.
      */
 
     static LinkedList<LinkedList<Integer>> powerSet(LinkedList<Integer> inputSet) {
-        // TODO
-        return null;
+        if (inputSet.isEmpty()) {
+            LinkedList<LinkedList<Integer>> result = new LinkedList<>();
+            result.add(new LinkedList<>());
+            return result;
+        }
+        // Kopie anlegen, damit der Parameter danach unverändert bleibt.
+        LinkedList<Integer> copy = new LinkedList<>(inputSet);
+        int last = copy.removeLast();
+        LinkedList<LinkedList<Integer>> powerSetWithoutLast = powerSet(copy);
+        LinkedList<LinkedList<Integer>> powerSetWithLast = addToAll(powerSetWithoutLast, last);
+        return concatenate(powerSetWithoutLast, powerSetWithLast);
     }
 
     /**
@@ -19,8 +50,20 @@ public class Main {
      * @param sum      should be returned as a list.
      */
     static LinkedList<Integer> findWithSum(LinkedList<Integer> inputSet, int sum) {
-        // TODO
-        return null;
+        if (sum == 0) {
+            return new LinkedList<>();
+        }
+        if (inputSet.isEmpty()) {
+            return null;
+        }
+        LinkedList<Integer> copy = new LinkedList<>(inputSet);
+        int current = copy.removeFirst();
+        LinkedList<Integer> result = findWithSum(copy, sum - current);
+        if (result != null) {
+            result.addFirst(current);
+            return result;
+        }
+        return findWithSum(copy, sum);
     }
 
 

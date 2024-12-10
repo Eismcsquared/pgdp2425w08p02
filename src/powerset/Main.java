@@ -17,23 +17,13 @@ public class Main {
         return result;
     }
 
-    private static <T> LinkedList<T> concatenate(LinkedList<T> l1, LinkedList<T> l2) {
-        if (l2.isEmpty()) {
-            return new LinkedList<>(l1);
-        }
-        LinkedList<T> copy1 = new LinkedList<>(l1);
-        LinkedList<T> copy2 = new LinkedList<>(l2);
-        copy1.add(copy2.removeFirst());
-        return concatenate(copy1, copy2);
-    }
-
     /**
      * @param inputSet from this set all power sets should be returned as a list.
      */
 
     static LinkedList<LinkedList<Integer>> powerSet(LinkedList<Integer> inputSet) {
+        LinkedList<LinkedList<Integer>> result = new LinkedList<>();
         if (inputSet.isEmpty()) {
-            LinkedList<LinkedList<Integer>> result = new LinkedList<>();
             result.add(new LinkedList<>());
             return result;
         }
@@ -42,7 +32,9 @@ public class Main {
         int last = copy.removeLast();
         LinkedList<LinkedList<Integer>> powerSetWithoutLast = powerSet(copy);
         LinkedList<LinkedList<Integer>> powerSetWithLast = addToAll(powerSetWithoutLast, last);
-        return concatenate(powerSetWithoutLast, powerSetWithLast);
+        result.addAll(powerSetWithoutLast);
+        result.addAll(powerSetWithLast);
+        return result;
     }
 
     /**

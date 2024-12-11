@@ -45,7 +45,7 @@ public class Main {
         if (sum == 0) {
             return new LinkedList<>();
         }
-        if (inputSet.isEmpty()) {
+        if (inputSet.isEmpty() || sum < 0) {
             return null;
         }
         LinkedList<Integer> copy = new LinkedList<>(inputSet);
